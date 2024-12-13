@@ -11,20 +11,35 @@ class CategoryController extends ChangeNotifier {
   List<CategoryModel> categories = [];
   bool isLoading = false;
 
-  Future<void> fetchCategories() async {
-    isLoading = true;
-    notifyListeners();
+  // Future<void> fetchCategories() async {
+  //   isLoading = true;
+  //   notifyListeners();
 
-    try {
-      categories = await _firestoreService.getAllCategories();
-    } catch (e) {
-      log('Error fetching categories: $e');
-      categories = [];
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
+  //   try {
+  //     categories = await _firestoreService.getAllCategories();
+  //   } catch (e) {
+  //     log('Error fetching categories: $e');
+  //     categories = [];
+  //   } finally {
+  //     isLoading = false;
+  //     notifyListeners();
+  //   }
+  // }
+  Future<void> fetchCategories() async {
+  isLoading = true;
+  notifyListeners(); // Notify listeners that loading has started
+
+  try {
+    categories = await _firestoreService.getAllCategories();
+  } catch (e) {
+    log('Error fetching categories: $e');
+    categories = [];
+  } finally {
+    isLoading = false;
+    notifyListeners(); // Notify listeners that loading has finished
   }
+}
+
 
   Future<void> addCategory() async {
     isLoading = true;

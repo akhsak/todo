@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mimo/features/task/model/category_model.dart';
-
 import 'package:mimo/features/task/model/task_model.dart';
 import 'package:mimo/features/user/model/user_model.dart';
 
@@ -11,6 +10,7 @@ class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   Reference storage = FirebaseStorage.instance.ref();
+
   Future<void> createUser(UserModel user) async {
     try {
       await firestore.collection('users').doc(user.uid).set(user.toJson());
@@ -27,7 +27,7 @@ class FirestoreService {
     }
   }
 
-  getCurrentUser() async {
+  Future<UserModel> getCurrentUser() async {
     try {
       final user = await firestore
           .collection('users')
@@ -39,29 +39,49 @@ class FirestoreService {
     }
   }
 
-  updateProfilePic(imageFile, {String? imagePath}) async {
-    String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-    try {
-      Reference imageFolder =
-          storage.child('UserProfile').child('$imageName.jpg');
+  // Future<String> updateProfilePic(imageFile, {String? imagePath}) async {
+  //   String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+  //   try {
+  //     Reference imageFolder =
+  //         storage.child('UserProfile').child('$imageName.jpg');
 
-      if (imagePath != null) {
-        Reference image = storage.child(imagePath);
-        await image.delete();
-        log('The current Image Successfully deleted from Firebase Storage.');
+  //     if (imagePath != null) {
+  //       Reference image = storage.child(imagePath);
+  //       await image.delete();
+  //       log('The current image successfully deleted from Firebase Storage.');
+  //     }
+  //     await imageFolder.putFile(imageFile);
+  //     log('Image successfully uploaded to Firebase Storage.');
+  //     return imageFolder.fullPath;
+  //   } catch (e) {
+  //     throw 'Error in updateProfilePic: $e';
+  //   }
+  // }
+  Future<Reference> updateProfilePic(dynamic imageFile,
+      {String? imagePath}) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref();
+      final profilePicRef = storageRef
+          .child('profile_pics/${FirebaseAuth.instance.currentUser!.uid}');
+
+      if (imagePath != null && imagePath.isNotEmpty) {
+        // Delete the existing image
+        await storageRef.child(imagePath).delete();
       }
-      await imageFolder.putFile(imageFile);
-      log('Image successfully uploaded to Firebase Storage.');
-      return imageFolder;
+
+      // Upload the new image
+      await profilePicRef.putFile(imageFile);
+
+      return profilePicRef;
     } catch (e) {
-      throw 'Error in Update profile pic : $e';
+      throw Exception('Error uploading profile pic: $e');
     }
   }
 
   Future<void> addCategory(CategoryModel data) async {
     try {
       await firestore
-          .collection('user')
+          .collection('users')
           .doc(firebaseAuth.currentUser!.uid)
           .collection('category')
           .doc(data.id)
