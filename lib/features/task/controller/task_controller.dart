@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mimo/features/task/model/task_model.dart';
 import 'package:mimo/service/firestore_service.dart';
 
-
 class TaskController extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   TextEditingController taskController = TextEditingController();
