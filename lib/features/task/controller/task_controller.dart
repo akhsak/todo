@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ class TaskController extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   TextEditingController taskController = TextEditingController();
   List<TaskModel> tasks = [];
+
   bool isLoading = false;
 
   Future<void> fetchTasks(String categoryId) async {
@@ -20,8 +20,10 @@ class TaskController extends ChangeNotifier {
     } catch (e) {
       log('Error fetching tasks: $e');
       tasks = [];
+      //log(.where((x) => x == true).length);
     }
     isLoading = false;
+    log(isLoading.toString());
     notifyListeners();
   }
 
@@ -44,8 +46,6 @@ class TaskController extends ChangeNotifier {
     }
   }
 
- 
-
   Future<void> updateTask(TaskModel task) async {
     try {
       await _firestoreService.updateTask(task);
@@ -67,4 +67,13 @@ class TaskController extends ChangeNotifier {
       log('Error deleting task: $e');
     }
   }
+
+  //  Future <void> index()
+// {
+//     $tasks = Task::All();
+//     $completed = $tasks->where('completed', 100);
+//     //I dunno how...
+//     $inprogress = ...;
+//     return view('pages.projects', compact('projects', 'tasks', 'completed', 'inprogress'));
+// } 
 }

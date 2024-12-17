@@ -8,7 +8,6 @@ import 'package:mimo/features/user/model/user_model.dart';
 import 'package:mimo/service/firestore_service.dart';
 import 'package:mimo/service/permission_service.dart';
 
-
 class UserController extends ChangeNotifier {
   final FirestoreService firestoreService = FirestoreService();
   final PermissionService permissionService = PermissionService();
@@ -36,6 +35,7 @@ class UserController extends ChangeNotifier {
       notifyListeners();
     }
   }
+ 
 
   Future<void> uploadProfileImage() async {
     try {

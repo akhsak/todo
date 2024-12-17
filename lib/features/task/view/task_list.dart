@@ -137,6 +137,8 @@
 //     );
 //   }
 // }
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mimo/constants/colors.dart';
 import 'package:mimo/features/task/controller/task_controller.dart';
@@ -239,6 +241,8 @@ class _CategoryTasksScreenState extends State<CategoryTasksScreen> {
                                   date: task.date,
                                   isComplete: !task.isComplete!,
                                 ));
+                                log(task.isComplete.toString());
+                                log(task.isComplete!.toString());
                               },
                               child: CircleAvatar(
                                 radius: 14,

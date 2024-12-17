@@ -124,6 +124,10 @@ class CategoryList extends StatelessWidget {
                       .where((task) => task.categoryId == category.id)
                       .length;
 
+                  // final taskCompleted = taskController.fetchTasks().
+                  // .where((task) => task. == in)
+                  // .length;
+
                   return GestureDetector(
                     onLongPress: () => showDialog(
                         context: context,
@@ -165,11 +169,22 @@ class CategoryList extends StatelessWidget {
                             CustomText(
                               text: category.title,
                             ),
-                            CustomText(
-                              text:
-                                  '$taskCount task${taskCount == 1 ? '' : 's'}',
-                              size: 13,
-                              color: greyColor,
+                            Row(
+                              children: [
+                                CustomText(
+                                  
+                                  text:
+                                      '$taskCount task${taskCount == 1 ? '' : ''}',
+                                  size: 13,
+                                  color: const Color.fromARGB(255, 100, 97, 97),
+                                ),
+                                CustomText(
+                                  text:
+                                      '$taskCount completed${taskCount == 1 ? '' : ''}',
+                                  size: 13,
+                                  color: const Color.fromARGB(255, 77, 73, 73),
+                                ),
+                              ],
                             ),
                             // Removed Expanded widget here
                             Expanded(
