@@ -1,5 +1,5 @@
-// ignore_for_file: empty_catches, duplicate_ignore
 
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mimo/features/task/model/task_model.dart';
@@ -13,26 +13,38 @@ class TaskController extends ChangeNotifier {
 
   Future<void> fetchTasks(String categoryId) async {
     isLoading = true;
+    notifyListeners();
     try {
       tasks = await _firestoreService.getAllTasks(categoryId);
-      // ignore: empty_catches
-    } catch (e) {}
+      log('Fetched tasks for categoryId $categoryId: ${tasks.length}');
+    } catch (e) {
+      log('Error fetching tasks: $e');
+      tasks = [];
+    }
     isLoading = false;
     notifyListeners();
   }
 
   Future<void> addTask(String categoryId) async {
     try {
+      if (taskController.text.trim().isEmpty) {
+        log('Task cannot be empty');
+        return;
+      }
       await _firestoreService.addTask(TaskModel(
-          isComplete: false,
-          id: "${taskController.text}${DateTime.now()}",
-          categoryId: categoryId,
-          task: taskController.text,
-          date: Timestamp.now()));
+        isComplete: false,
+        id: "${taskController.text}${DateTime.now()}",
+        categoryId: categoryId,
+        task: taskController.text,
+        date: Timestamp.now(),
+      ));
       fetchTasks(categoryId);
-      notifyListeners();
-    } catch (e) {}
+    } catch (e) {
+      log('Error adding task: $e');
+    }
   }
+
+ 
 
   Future<void> updateTask(TaskModel task) async {
     try {
@@ -42,14 +54,17 @@ class TaskController extends ChangeNotifier {
         tasks[index] = task;
         notifyListeners();
       }
-    } catch (e) {}
+    } catch (e) {
+      log('Error updating task: $e');
+    }
   }
 
   Future<void> deleteTask(String categoryId, String id) async {
     try {
       await _firestoreService.deleteTask(categoryId, id);
       fetchTasks(categoryId);
-      notifyListeners();
-    } catch (e) {}
+    } catch (e) {
+      log('Error deleting task: $e');
+    }
   }
 }

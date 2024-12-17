@@ -1,3 +1,4 @@
+
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ class FirestoreService {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   Reference storage = FirebaseStorage.instance.ref();
 
+  // User Management
   Future<void> createUser(UserModel user) async {
     try {
       await firestore.collection('users').doc(user.uid).set(user.toJson());
@@ -39,24 +41,7 @@ class FirestoreService {
     }
   }
 
-  // Future<String> updateProfilePic(imageFile, {String? imagePath}) async {
-  //   String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-  //   try {
-  //     Reference imageFolder =
-  //         storage.child('UserProfile').child('$imageName.jpg');
-
-  //     if (imagePath != null) {
-  //       Reference image = storage.child(imagePath);
-  //       await image.delete();
-  //       log('The current image successfully deleted from Firebase Storage.');
-  //     }
-  //     await imageFolder.putFile(imageFile);
-  //     log('Image successfully uploaded to Firebase Storage.');
-  //     return imageFolder.fullPath;
-  //   } catch (e) {
-  //     throw 'Error in updateProfilePic: $e';
-  //   }
-  // }
+  // Profile Picture Management
   Future<Reference> updateProfilePic(dynamic imageFile,
       {String? imagePath}) async {
     try {
@@ -78,6 +63,7 @@ class FirestoreService {
     }
   }
 
+  // Category Management
   Future<void> addCategory(CategoryModel data) async {
     try {
       await firestore
@@ -135,6 +121,7 @@ class FirestoreService {
     }
   }
 
+  // Task Management
   Future<void> addTask(TaskModel data) async {
     try {
       await firestore

@@ -24,4 +24,17 @@ class CategoryModel {
       icon: json['icon'],
     );
   }
+
+  // Define the copyWith method
+  CategoryModel copyWith({
+    String? id,
+    String? title,
+    String? icon,
+  }) {
+    return CategoryModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      icon: icon ?? this.icon,
+    );
+  }
 }
